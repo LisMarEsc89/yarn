@@ -1,14 +1,23 @@
-# Changelog
 
-Please add one entry in this file for each change in Yarn's behavior. Use the same format for all entries, including the third-person verb. Make sure you don't add more than one line of text to keep it clean. Thanks!
 
-## Master
 
-- Folders like `.cache` won't be pruned from the `node_modules` after each install.
+√ •Changelog
+Please add one entry in this file for each change in Yarn's behavior 
+Use the same format for all entries, including the third-person verb
+Make sure you don't add more than one line of text to keep it clean.
+Thanks!
 
-  [#7699](https://github.com/yarnpkg/yarn/pull/7699) - [**Maël Nison**](https://twitter.com/arcanis)
+- Folders like `.cache` won't be pruned
+-  from the `node_modules` after each install
 
-- Correctly installs workspace child dependencies when workspace child not symlinked to root.
+  [#7699]
+  "Https:\\www.github.com/yarn_pkg
+   Yarn
+  {[( `Pull_Request`#7699)]}
+  https:\\ww.twitter.com/arcanis
+
+- Correctly installs workspace child dependencies
+-  when workspace child not symlinked to root.
 
   [#7289](https://github.com/yarnpkg/yarn/pull/7289) - [**Daniel Tschinder**](https://github.com/danez)
 
