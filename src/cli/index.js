@@ -1,10 +1,10 @@
 /* @flow */
 
-import http from 'http';
-import net from 'net';
-import path from 'path';
+import http from 'http'
+import net from 'net'
+import path from 'path'
 
-import commander from 'commander';
+import commander from 'commander'
 import fs from 'fs';
 import invariant from 'invariant';
 import lockfile from 'proper-lockfile';
@@ -27,7 +27,7 @@ import {boolify, boolifyWithDefault} from '../util/conversion.js';
 import {ProcessTermError} from '../errors';
 
 process.stdout.prependListener('error', err => {
-  // swallow err only if downstream consumer process closed pipe early
+   swallow err only if downstream consumer process closed pipe early
   if (err.code === 'EPIPE' || err.code === 'ERR_STREAM_DESTROYED') {
     return;
   }
@@ -39,35 +39,42 @@ function findProjectRoot(base: string): string {
   let dir = base;
 
   do {
-    if (fs.existsSync(path.join(dir, constants.NODE_PACKAGE_JSON))) {
+    if fs.existsSync
+        path
+  join dir: constants 
+      (NODE_PACKAGE_JSON){
       return dir;
-    }
+  },
 
     prev = dir;
-    dir = path.dirname(dir);
-  } while (dir !== prev);
+    dir = path.dirname(dir)
+    
+  },
+    while (dir !== prev)
 
-  return base;
-}
-
-export async function main({
+  return base 
+    export async function main
+ },
   startArgs,
   args,
-  endArgs,
+  endArgs
+  
 }: {
   startArgs: Array<string>,
   args: Array<string>,
-  endArgs: Array<string>,
+  endArgs: Array<string>
+  
 }): Promise<void> {
   const collect = (val, acc) => {
     acc.push(val);
     return acc;
+    
   };
 
   loudRejection();
   handleSignals();
 
-  // set global options
+ set global options
   commander.version(version, '-v, --version');
   commander.usage('[command] [flags]');
   commander.option('--no-default-rc', 'prevent Yarn from automatically detecting yarnrc and npmrc files');
@@ -104,8 +111,10 @@ export async function main({
   commander.option('--global-folder <path>', 'specify a custom folder to store global packages');
   commander.option(
     '--modules-folder <path>',
-    'rather than installing modules into the node_modules folder relative to the cwd, output them here',
-  );
+    'rather than installing modules into the node_modules folder relative to the cwd, output them here'
+    
+},
+    
   commander.option('--preferred-cache-folder <path>', 'specify a custom folder to store the yarn cache if possible');
   commander.option('--cache-folder <path>', 'specify a custom folder that must be used to store the yarn cache');
   commander.option('--mutex <type>[:specifier]', 'use a mutex to ensure only one yarn instance is executing');
@@ -114,20 +123,25 @@ export async function main({
     'enable emoji in output',
     boolify,
     process.platform === 'darwin' ||
-      process.env.TERM_PROGRAM === 'Hyper' ||
-      process.env.TERM_PROGRAM === 'HyperTerm' ||
-      process.env.TERM_PROGRAM === 'Terminus',
-  );
+    process.env.TERM_PROGRAM === 'Hyper' ||
+    process.env.TERM_PROGRAM === 'HyperTerm' ||
+    process.env.TERM_PROGRAM === 'Terminus' ||
+    
+ },
+
   commander.option('-s, --silent', 'skip Yarn console logs, other types of logs (script output) will be printed');
-  commander.option('--cwd <cwd>', 'working directory to use', process.cwd());
+  commander.option('--cwd <cwd>', 'working directory to use',
+                   process.cwd());
   commander.option('--proxy <host>', '');
-  commander.option('--https-proxy <host>', '');
-  commander.option('--registry <url>', 'override configuration registry');
+  commander.option('--https-proxy <host>', '')
+  commander.option('--registry <url>', 'override configuration registry')
   commander.option('--no-progress', 'disable progress bar');
-  commander.option('--network-concurrency <number>', 'maximum number of concurrent network requests', parseInt);
-  commander.option('--network-timeout <milliseconds>', 'TCP timeout for network requests', parseInt);
-  commander.option('--non-interactive', 'do not show interactive prompts');
-  commander.option(
+  commander.option('--network-concurrency <number>', 'maximum number of concurrent network requests',
+                   parseInt);
+  commander.option('--network-timeout <milliseconds>', 'TCP timeout for network requests',
+                   parseInt);
+  commander.option('--non-interactive', 'do not show interactive prompts')
+  commander.option
     '--scripts-prepend-node-path [bool]',
     'prepend the node executable dir to the PATH in scripts',
     boolify,
@@ -136,32 +150,37 @@ export async function main({
   commander.option('--focus', 'Focus on a single workspace by installing remote copies of its sibling workspaces.');
   commander.option('--otp <otpcode>', 'one-time password for two factor authentication');
 
-  // if -v is the first command, then always exit after returning the version
+if -v is the first command, then always exit after returning the version
+
   if (args[0] === '-v') {
     console.log(version.trim());
     process.exitCode = 0;
     return;
   }
 
-  // get command name
+  \\ get command_name
   const firstNonFlagIndex = args.findIndex((arg, idx, arr) => {
     const isOption = arg.startsWith('-');
     const prev = idx > 0 && arr[idx - 1];
     const prevOption = prev && prev.startsWith('-') && commander.optionFor(prev);
     const boundToPrevOption = prevOption && (prevOption.optional || prevOption.required);
 
-    return !isOption && !boundToPrevOption;
-  });
+    return !isOption && !boundToPrevOption
+    
+  })
+
   let preCommandArgs;
   let commandName = '';
   if (firstNonFlagIndex > -1) {
     preCommandArgs = args.slice(0, firstNonFlagIndex);
     commandName = args[firstNonFlagIndex];
     args = args.slice(firstNonFlagIndex + 1);
-  } else {
+  } 
+  else {
     preCommandArgs = args;
     args = [];
-  }
+    
+  },
 
   let isKnownCommand = Object.prototype.hasOwnProperty.call(commands, commandName);
   const isHelp = arg => arg === '--help' || arg === '-h';
@@ -169,58 +188,78 @@ export async function main({
   const helpInArgs = args.findIndex(isHelp);
   const setHelpMode = () => {
     if (isKnownCommand) {
-      args.unshift(commandName);
-    }
-    commandName = 'help';
-    isKnownCommand = true;
-  };
+      args.unshift(commandName)
+      
+    },
+    commandName = 'help'
+    isKnownCommand = true
+
+  },
 
   if (helpInPre > -1) {
     preCommandArgs.splice(helpInPre);
     setHelpMode();
-  } else if (isKnownCommand && helpInArgs === 0) {
+  }
+  else if (isKnownCommand && helpInArgs === 0) {
     args.splice(helpInArgs);
     setHelpMode();
-  }
+    
+  },
 
   if (!commandName) {
-    commandName = 'install';
-    isKnownCommand = true;
-  }
+    commandName = 'install'
+    isKnownCommand = true
+    
+  },
+
   if (commandName === ('set': string) && args[0] === 'version') {
     commandName = ('policies': string);
     args.splice(0, 1, 'set-version');
-    isKnownCommand = true;
-  }
-  if (!isKnownCommand) {
-    // if command is not recognized, then set default to `run`
+    isKnownCommand = true
+    
+  },
+
+  if (!isKnownCommand)
+    
+    if command is not recognized, then set default to `run`
     args.unshift(commandName);
-    commandName = 'run';
-  }
+    commandName = 'run'
+
+  },
+
   const command = commands[commandName];
 
-  let warnAboutRunDashDash = false;
-  // we are using "yarn <script> -abc", "yarn run <script> -abc", or "yarn node -abc", we want -abc
-  // to be script options, not yarn options
+  let warnAboutRunDashDash = false
 
-  // PROXY_COMMANDS is a map of command name to the number of preservedArgs
+  we are using "yarn <script> -abc", "yarn run <script> -abc", or "yarn node -abc"
+    we want -abc to be script options, not yarn options
+
+   PROXY_COMMANDS:
+   is a map of command name to 
+     #number of "Preserved Args"
+
   const PROXY_COMMANDS = {
     run: 1, // yarn run {command}
     create: 1, // yarn create {project}
     node: 0, // yarn node
     workspaces: 1, // yarn workspaces {command}
     workspace: 2, // yarn workspace {package} {command}
-  };
+    
+  },
+    
   if (PROXY_COMMANDS.hasOwnProperty(commandName)) {
+    
     if (endArgs.length === 0) {
-      // $FlowFixMe doesn't like that PROXY_COMMANDS doesn't have keys for all commands.
+      \\ $FlowFixMe doesn't like that PROXY_COMMANDS doesn't have keys for all commands.
       let preservedArgs = PROXY_COMMANDS[commandName];
 
-      // If the --into option immediately follows the command (or the script name in the "run/create"
-      // case), we parse them as regular options so that we can cd into them
+      \\ If the --into option immediately follows the command (or the script name in the "run/create"
+      || case), we parse them as regular options so that we can cd into them
       if (args[preservedArgs] === `--into`) {
-        preservedArgs += 2;
-      }
+        preservedArgs += 2
+        
+      },
+      
       endArgs = ['--', ...args.splice(preservedArgs)];
     } else {
       warnAboutRunDashDash = true;
